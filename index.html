@@ -1,0 +1,234 @@
+<!--
+    @Author Jacky Shen, Agile Coach
+    @Company http://www.UPerform.CN, 2021
+
+	It's to draw balance wheel as an assessment tool.
+
+    based on https://echarts.apache.org/examples/zh/editor.html?c=pie-roseType-simple
+
+-->
+<!DOCTYPE html>
+<html style="height: 100%">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body style="height: 100%; margin: 0">
+        <div id="container" style="float: left; height: 700px; width: 500px;margin: 10px;"></div>
+        <div style=" margin: 20px;float: left;">
+        	<div style="float: left;"><p>维度标签</p><textarea id="dimensions" style="font-family: serif; font-size: 14px; height: 600px;"></textarea></div>
+        	<div style="float: left;"><p>评估数据1 (1-5分)</p><textarea id="teamData1" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
+        	<div style="float: left;"><p>评估数据2 (1-5分)</p><textarea id="teamData2" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
+        	<div><input type="checkbox" id="willShowLabel">显示标签？</input><button id="update" onclick="update()">UPDATE</button></div>
+        </div>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+        <!-- Uncomment this line if you want to dataTool extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/dataTool.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to use gl extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to echarts-stat extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to use map
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/map/js/china.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/map/js/world.js"></script>
+        -->
+        <!-- Uncomment these two lines if you want to use bmap extension
+        <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=<Your Key Here>"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
+        -->
+
+        <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+
+var dimensions = [
+	"小团队自组织",
+	"跨职能融合深",
+	"高信任和尊重",
+	"角色职责明确",
+	"基本功扎实",
+	"愿景策划清晰",
+	"用户价值闭环",
+	"单一决策收口",
+	"要事第一排序",
+	"拆分粒度小",
+	"一致理解完成",
+	"信息共识可视",
+	"形成改善节奏",
+	"交付周期短",
+	"等待和依赖少",
+	"频密集成工作",
+	"版本控制清晰",
+	"工具高效顺手",
+	"维护成本低",
+	"自动化程度高",
+	"业务引领变革",
+	"投资人员培养",
+	"试错容忍度高",
+	"以客户为中心",
+	"领导以身作则"
+];
+
+var teamData1 = [
+1.5,
+2,
+2,
+2,
+2,
+1.5,
+2,
+2,
+1.5,
+1.5,
+1.5,
+1.5,
+2,
+1.5,
+1.5,
+1.5,
+2,
+1.5,
+0.5,
+0.5,
+1.5,
+1,
+1.5,
+1.5,
+2
+];
+
+var teamData2 = [
+3,
+2.5,
+2.5,
+3,
+2.5,
+3,
+2,
+2,
+2.5,
+3,
+2.5,
+3,
+3,
+2,
+2,
+2,
+2,
+2,
+1,
+1,
+2,
+2.5,
+2,
+2,
+3
+];
+
+document.getElementById("dimensions").innerHTML = dimensions.join('\n');
+document.getElementById("teamData1").innerHTML = teamData1.join('\n');
+document.getElementById("teamData2").innerHTML = teamData2.join('\n');
+
+var computedData1 = [
+    {value: 4.5, name: 'rose 1'},
+    {value: 3.5, name: 'rose 2'},
+    {value: 2, name: 'rose 3'},
+    {value: 3, name: 'rose 4'},
+    {value: 2, name: 'rose 5'},
+    {value: 3, name: 'rose 6'},
+    {value: 2, name: 'rose 7'},
+    {value: 1, name: 'rose 8'}
+];
+
+var option;
+var computedData1;
+var computedData2;
+
+option = {
+	    legend: {
+	        top: 'bottom'
+	    },
+	    toolbox: {
+	        show: true,
+	        feature: {
+	            mark: {show: true},
+	            dataView: {show: true, readOnly: false},
+	            restore: {show: true},
+	            saveAsImage: {show: true}
+	        }
+	    },
+	    series: [
+	        {
+	            name: '面积模式',
+	            label: {show: false},
+	            type: 'pie',
+	            radius: [20, 100],
+	            center: ['50%', '50%'],
+	            roseType: 'area',
+	            itemStyle: {
+	                borderRadius: 3
+	            },
+	            data: computedData1
+	        }
+	    ]
+	};
+
+function update() {
+	console.log("update");
+	dimensions = document.getElementById("dimensions").value.split('\n');
+	teamData1 = document.getElementById("teamData1").value.split('\n');
+	teamData2 = document.getElementById("teamData2").value.split('\n');
+	willShowLabel = document.getElementById("willShowLabel").checked;
+
+
+	computedData1 = teamData1.map(function (e, i) {
+		return {value: e, name: dimensions[i]}
+	});	
+	computedData2 = teamData2.map(function (e, i) {
+		return {value: e, name: dimensions[i]}
+	});
+
+	option = {
+	    legend: {
+	        top: 'bottom'
+	    },
+	    toolbox: {
+	        show: true,
+	        feature: {
+	            mark: {show: true},
+	            dataView: {show: true, readOnly: false},
+	            restore: {show: true},
+	            saveAsImage: {show: true}
+	        }
+	    },
+	    series: [
+	        {
+	            name: '面积模式',
+	            label: {show: willShowLabel},
+	            type: 'pie',
+	            radius: [20, 100],
+	            center: ['50%', '50%'],
+	            roseType: 'area',
+	            itemStyle: {
+	                borderRadius: 3
+	            },
+	            data: computedData1
+	        }
+	    ]
+	};
+
+	myChart.setOption(option);
+}
+
+if (option && typeof option === 'object') {
+    update();
+}
+
+        </script>
+    </body>
+</html>
+    
