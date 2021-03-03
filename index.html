@@ -16,12 +16,12 @@
         <div id="container" style="float: left; height: 700px; width: 500px;margin: 10px;"></div>
         <div style=" margin: 20px;float: left;">
         	<div style="float: left;"><p>维度标签</p><textarea id="dimensions" style="font-family: serif; font-size: 14px; height: 600px;"></textarea></div>
-        	<div style="float: left;"><p>数据1，蓝色 (1-5分)</p><textarea id="teamData1" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
-        	<div style="float: left;"><p>数据2，红色 (1-5分)</p><textarea id="teamData2" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
+        	<div style="float: left;"><p>数据1，蓝色 (1-5分)</p><textarea id="teamData1" style="font-family: serif; font-size: 14px;height: 600px;" onchange="update()"></textarea></div>
+        	<div style="float: left;"><p>数据2，红色 (1-5分)</p><textarea id="teamData2" style="font-family: serif; font-size: 14px;height: 600px;" onchange="update()"></textarea></div>
         	<div>
-        		<input type="checkbox" id="willShowLabel"><label for="willShowLabel">显示标签？</label>
-        		<input type="checkbox" id="willCompareWithTeam2" ><label for="willCompareWithTeam2">对比第2组？</label>
-        		<button id="update" onclick="update()">UPDATE</button>
+        		<input type="checkbox" id="willShowLabel" onchange="update()"><label for="willShowLabel">显示标签？</label>
+        		<input type="checkbox" id="willCompareWithTeam2" onchange="toogleTwo()"><label for="willCompareWithTeam2">对比第2组？</label>
+        		<button id="update" onClick="update()">UPDATE</button>
         	</div>
         </div>
 
@@ -153,6 +153,11 @@ var computedData2;
 var series;
 const MAX_SCORE = 5;
 
+function toogleTwo() {
+	myChart.clear();
+	update();
+}
+
 
 function update() {
 
@@ -190,9 +195,7 @@ function update() {
 	            data: computedData1
 	        }
 	    ]
-	console.log(willCompareWithTeam2);
-	console.log(series);
-	
+
 	if (willCompareWithTeam2) {
 		series.splice(0, 0, 	        
 			{
@@ -230,7 +233,8 @@ function update() {
 	}
 
 	if (option && typeof option === 'object') {
-		myChart.clear();
+		// if (willCompareWithTeam2) 
+		// 	myChart.clear();
 		myChart.setOption(option);
 	}
 
