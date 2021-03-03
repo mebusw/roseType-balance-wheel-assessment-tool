@@ -18,13 +18,17 @@
         	<div style="float: left;"><p>维度标签</p><textarea id="dimensions" style="font-family: serif; font-size: 14px; height: 600px;"></textarea></div>
         	<div style="float: left;"><p>数据1，蓝色 (1-5分)</p><textarea id="teamData1" style="font-family: serif; font-size: 14px;height: 600px;" onchange="update()"></textarea></div>
         	<div style="float: left;"><p>数据2，红色 (1-5分)</p><textarea id="teamData2" style="font-family: serif; font-size: 14px;height: 600px;" onchange="update()"></textarea></div>
-        	<div>
+		</div>
+        <div>
+        	<h1>平衡轮绘图工具</h1>
+			<a href="http://www.uperform.cn">UPerform.CN, 优普丰敏捷学院</a>  ©2007-2021 作者：Jacky Shen
+		</div> 
+        <div style="">
+        		<p></p>
         		<input type="checkbox" id="willShowLabel" onchange="update()"><label for="willShowLabel">显示标签？</label>
         		<input type="checkbox" id="willCompareWithTeam2" onchange="toogleTwo()"><label for="willCompareWithTeam2">对比第2组？</label>
-        		<button id="update" onClick="update()">UPDATE</button>
-        	</div>
-	        <div><a href="http://www.uperform.cn">UPerform.CN 优普丰敏捷学院</a>  ©2007-2021 作者：Jacky Shen</div>
-        </div>
+        		<button id="update" onClick="update()">手动UPDATE</button>
+	    </div>
 
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
         <!-- Uncomment this line if you want to dataTool extension
