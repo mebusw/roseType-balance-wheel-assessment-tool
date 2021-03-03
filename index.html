@@ -47,7 +47,6 @@
         <script type="text/javascript">
 var dom = document.getElementById("container");
 var myChart = echarts.init(dom);
-var app = {};
 
 var dimensions = [
 	"小团队自组织",
@@ -156,6 +155,7 @@ const MAX_SCORE = 5;
 
 
 function update() {
+
 	console.log("update");
 	dimensions = document.getElementById("dimensions").value.split('\n');
 	teamData1 = document.getElementById("teamData1").value.split('\n');
@@ -230,6 +230,7 @@ function update() {
 	}
 
 	if (option && typeof option === 'object') {
+		myChart.clear();
 		myChart.setOption(option);
 	}
 
