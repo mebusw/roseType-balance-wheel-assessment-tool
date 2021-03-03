@@ -16,15 +16,11 @@
         <div id="container" style="float: left; height: 700px; width: 500px;margin: 10px;"></div>
         <div style=" margin: 20px;float: left;">
         	<div style="float: left;"><p>维度标签</p><textarea id="dimensions" style="font-family: serif; font-size: 14px; height: 600px;"></textarea></div>
-        	<div style="float: left;"><p>评估数据1 (1-5分)</p><textarea id="teamData1" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
-        	<div style="float: left;"><p>评估数据2 (1-5分)</p><textarea id="teamData2" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
+        	<div style="float: left;"><p>数据1，蓝色 (1-5分)</p><textarea id="teamData1" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
+        	<div style="float: left;"><p>数据2，红色 (1-5分)</p><textarea id="teamData2" style="font-family: serif; font-size: 14px;height: 600px;"></textarea></div>
         	<div>
         		<input type="checkbox" id="willShowLabel"><label for="willShowLabel">显示标签？</label>
-        		<select id="colorPicker">
-        			<option value="#4992ff">蓝色</option>
-        			<option value="#ff6e76">红色</option>
-        			<option value="#05c091">绿色</option>
-        		</select> 
+        		<input type="checkbox" id="willCompareWithTeam2" ><label for="willCompareWithTeam2">对比第2组？</label>
         		<button id="update" onclick="update()">UPDATE</button>
         	</div>
         </div>
@@ -155,52 +151,66 @@ var computedData1 = [
 var option;
 var computedData1;
 var computedData2;
+var series;
+const MAX_SCORE = 5;
 
-option = {
-	    legend: {
-	        top: 'bottom'
-	    },
-	    toolbox: {
-	        show: true,
-	        feature: {
-	            mark: {show: true},
-	            dataView: {show: true, readOnly: false},
-	            restore: {show: true},
-	            saveAsImage: {show: true}
-	        }
-	    },
-	    series: [
-	        {
-	            name: '面积模式',
-	            label: {show: false},
-	            type: 'pie',
-	            radius: [20, 100],
-	            center: ['50%', '50%'],
-	            roseType: 'area',
-	            itemStyle: {
-	                borderRadius: 3
-	            },
-	            data: computedData1
-	        }
-	    ]
-	};
 
 function update() {
 	console.log("update");
 	dimensions = document.getElementById("dimensions").value.split('\n');
 	teamData1 = document.getElementById("teamData1").value.split('\n');
 	teamData2 = document.getElementById("teamData2").value.split('\n');
-	willShowLabel = document.getElementById("willShowLabel").checked;
-	var colorPicker = document.getElementById("colorPicker").value;
-	var colorArr = Array(dimensions.length).fill(colorPicker);
+	var willShowLabel = document.getElementById("willShowLabel").checked;
+	var willCompareWithTeam2 = document.getElementById("willCompareWithTeam2").checked;
 
-
+	var maxOfTeam1 = Math.max(...teamData1)
+	var maxOfTeam2 = Math.max(...teamData2)
+	var maxOfTeams = Math.max(maxOfTeam1, maxOfTeam2)
+	
 	computedData1 = teamData1.map(function (e, i) {
 		return {value: e, name: dimensions[i]}
 	});	
 	computedData2 = teamData2.map(function (e, i) {
 		return {value: e, name: dimensions[i]}
-	});
+	}); 
+
+	var series = [
+	        {
+	            name: 'team1',
+	            label: {show: willShowLabel},
+	            type: 'pie',
+	            radius: [0, maxOfTeam1/MAX_SCORE*70 + '%'],
+	            center: ['50%', '50%'],
+	            roseType: 'area',
+	            itemStyle: {
+	                borderRadius: 3,
+	                color: "#4992ffcc" //Blue
+	            },
+	            z: 10,
+	            data: computedData1
+	        }
+	    ]
+	console.log(willCompareWithTeam2);
+	console.log(series);
+	
+	if (willCompareWithTeam2) {
+		series.splice(0, 0, 	        
+			{
+	            name: 'team2',
+	            label: {show: willShowLabel},
+	            type: 'pie',
+	            radius: [0, maxOfTeam2/MAX_SCORE*70 + '%'],
+	            center: ['50%', '50%'],
+	            roseType: 'area',
+	            itemStyle: {
+	                borderRadius: 3,
+	                color: "#ff6e76ff" //Red
+	            },
+	            z: -10,
+	            data: computedData2
+	        }
+	    )
+	}
 
 	option = {
 	    legend: {
@@ -215,29 +225,18 @@ function update() {
 	            saveAsImage: {show: true}
 	        }
 	    },
-	    series: [
-	        {
-	            name: '面积模式',
-	            label: {show: willShowLabel},
-	            type: 'pie',
-	            radius: [20, 100],
-	            center: ['50%', '50%'],
-	            roseType: 'area',
-	            itemStyle: {
-	                borderRadius: 3
-	            },
-	            data: computedData1
-	        }
-	    ],
-	    color: colorArr
-	};
+	    series: series
+	    
+	}
 
-	myChart.setOption(option);
+	if (option && typeof option === 'object') {
+		myChart.setOption(option);
+	}
+
 }
 
-if (option && typeof option === 'object') {
-    update();
-}
+update();
+
 
         </script>
     </body>
